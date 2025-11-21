@@ -2,19 +2,15 @@ name: Unit Test
 
 on:
   pull_request:
-    types:
-      - assigned
-      - opened
-      - ready_for_review
-      - review_requested
     branches:
       - master
 
   workflow_dispatch:
     inputs:
-      branch:
-        description: "Branch to test"
+      pr_number:
+        description: "Pull request number"
         required: true
+        type: string
 
 jobs:
   unit-test:
@@ -46,3 +42,6 @@ jobs:
       - name: Comment on pull request
         if: github.event_name == 'pull_request'
         uses: MishaKav/jest-coverage-comment@main
+        with:
+          issue-number: ${{ github.event.inputs.pr_number }}
+          create-new-comment: true
