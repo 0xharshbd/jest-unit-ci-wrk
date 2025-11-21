@@ -39,8 +39,9 @@ jobs:
       - name: Run unit tests
         env:
           NODE_OPTIONS: "--no-experimental-webstorage"
+          JEST_JUNIT_OUTPUT_DIR: "./coverage"
         continue-on-error: true
-        run: pnpm jest --ci --coverage=true | tee /tmp/coverage.txt && exit ${PIPESTATUS[0]}
+        run: mkdir -p coverage && pnpm jest --ci --coverage=true --coverageReporters=text --coverageReporters=json-summary --reporters=jest-junit | tee /coverage/coverage.txt
 
       - name: Comment on pull request
         if: github.event_name == 'pull_request'
@@ -49,4 +50,11 @@ jobs:
           issue-number: ${{ github.event.inputs.pr_number }}
           create-new-comment: true
           coverage-title: "Unit Test Coverage Report"
-          coverage-path: /tmp/coverage.txt
+          coverage-path: /coverage/coverage.txt
+
+      - name: Test Report
+        uses: dorny/test-reporter@v2
+        with:
+          name: Jest Unit Test Report
+          path: coverage/junit.xml
+          reporter: jest-junit
