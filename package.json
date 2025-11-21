@@ -4,7 +4,8 @@
   "description": "",
   "type": "commonjs",
   "scripts": {
-    "test": "NODE_OPTIONS=\"--no-experimental-webstorage\" jest"
+    "test": "NODE_OPTIONS=\"--no-experimental-webstorage\" jest",
+    "test:coverage": "NODE_OPTIONS=\"--no-experimental-webstorage\" jest --coverage"
   },
   "keywords": [],
   "author": "",
