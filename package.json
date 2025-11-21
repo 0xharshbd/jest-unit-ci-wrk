@@ -5,7 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "test": "NODE_OPTIONS=\"--no-experimental-webstorage\" jest",
-    "test:coverage": "NODE_OPTIONS=\"--no-experimental-webstorage\" jest --coverage"
+    "test:coverage": "NODE_OPTIONS=\"--no-experimental-webstorage\" jest --coverage --coverageReporters=text"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,7 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.1",
-    "jest": "^30.2.0"
+    "jest": "^30.2.0",
+    "jest-junit": "^16.0.0"
   }
 }

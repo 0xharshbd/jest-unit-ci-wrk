@@ -4,11 +4,16 @@ on:
   pull_request:
     branches:
       - master
+
   workflow_dispatch:
     inputs:
-      branch:
-        description: "Branch to test"
+      pr_number:
+        description: "Pull request number"
         required: true
+        type: string
+
+env:
+  COVERAGE_DIR: ./coverage
 
 jobs:
   unit-test:
@@ -35,8 +40,24 @@ jobs:
         run: pnpm install
 
       - name: Run unit tests
-        run: pnpm test:coverage --ci
+        env:
+          NODE_OPTIONS: "--no-experimental-webstorage"
+          JEST_JUNIT_OUTPUT_DIR: ${{ env.COVERAGE_DIR }}
+        continue-on-error: true
+        run: mkdir -p ${{ env.COVERAGE_DIR }} && pnpm jest --ci --coverage=true --coverageReporters=text --coverageReporters=json-summary --reporters=jest-junit | tee ${{ env.COVERAGE_DIR }}/coverage.txt
 
-      - name: Jest Coverage Comment
+      - name: Comment on pull request
         if: github.event_name == 'pull_request'
         uses: MishaKav/jest-coverage-comment@main
+        with:
+          issue-number: ${{ github.event.inputs.pr_number }}
+          create-new-comment: true
+          coverage-title: "Unit Test Coverage Report"
+          coverage-path: ${{ env.COVERAGE_DIR }}/coverage.txt
+
+      - name: Test Report
+        uses: dorny/test-reporter@v2
+        with:
+          name: Jest Unit Test Report
+          path: ${{ env.COVERAGE_DIR }}/junit.xml
+          reporter: jest-junit
