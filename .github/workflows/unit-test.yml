@@ -12,6 +12,9 @@ on:
         required: true
         type: string
 
+env:
+  COVERAGE_DIR: ./coverage
+
 jobs:
   unit-test:
     name: Unit Test
@@ -39,9 +42,9 @@ jobs:
       - name: Run unit tests
         env:
           NODE_OPTIONS: "--no-experimental-webstorage"
-          JEST_JUNIT_OUTPUT_DIR: "./coverage"
+          JEST_JUNIT_OUTPUT_DIR: ${{ env.COVERAGE_DIR }}
         continue-on-error: true
-        run: mkdir -p coverage && pnpm jest --ci --coverage=true --coverageReporters=text --coverageReporters=json-summary --reporters=jest-junit | tee /coverage/coverage.txt
+        run: mkdir -p ${{ env.COVERAGE_DIR }} && pnpm jest --ci --coverage=true --coverageReporters=text --coverageReporters=json-summary --reporters=jest-junit | tee ${{ env.COVERAGE_DIR }}/coverage.txt
 
       - name: Comment on pull request
         if: github.event_name == 'pull_request'
@@ -50,11 +53,11 @@ jobs:
           issue-number: ${{ github.event.inputs.pr_number }}
           create-new-comment: true
           coverage-title: "Unit Test Coverage Report"
-          coverage-path: /coverage/coverage.txt
+          coverage-path: ${{ env.COVERAGE_DIR }}/coverage.txt
 
       - name: Test Report
         uses: dorny/test-reporter@v2
         with:
           name: Jest Unit Test Report
-          path: coverage/junit.xml
+          path: ${{ env.COVERAGE_DIR }}/junit.xml
           reporter: jest-junit
