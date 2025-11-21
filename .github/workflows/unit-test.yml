@@ -2,8 +2,14 @@ name: Unit Test
 
 on:
   pull_request:
+    types:
+      - assigned
+      - opened
+      - ready_for_review
+      - review_requested
     branches:
       - master
+
   workflow_dispatch:
     inputs:
       branch:
@@ -37,6 +43,6 @@ jobs:
       - name: Run unit tests
         run: pnpm test:coverage --ci
 
-      - name: Jest Coverage Comment
+      - name: Comment on pull request
         if: github.event_name == 'pull_request'
         uses: MishaKav/jest-coverage-comment@main
