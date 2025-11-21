@@ -37,7 +37,7 @@ jobs:
         run: pnpm install
 
       - name: Run unit tests
-        run: pnpm test:coverage --ci | tee coverage/coverage.txt && exit ${PIPESTATUS[0]}
+        run: pnpm test:coverage --ci | tee /tmp/coverage.txt && exit ${PIPESTATUS[0]}
 
       - name: Comment on pull request
         if: github.event_name == 'pull_request'
@@ -46,4 +46,4 @@ jobs:
           issue-number: ${{ github.event.inputs.pr_number }}
           create-new-comment: true
           coverage-title: "Unit Test Coverage Report"
-          coverage-path: coverage/coverage.txt
+          coverage-path: /tmp/coverage.txt
