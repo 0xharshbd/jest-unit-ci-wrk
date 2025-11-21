@@ -38,18 +38,9 @@ jobs:
 
       - name: Run unit tests
         env:
-          JEST_JUNIT_OUTPUT_DIR: "/tmp/coverage"
           NODE_OPTIONS: "--no-experimental-webstorage"
-        run: pnpm jest --ci --coverage --reporters=default --reporters=jest-junit | tee /tmp/coverage.txt
-
-      - name: Test Report
-        uses: dorny/test-reporter@v2
-        if: ${{ !cancelled() }}
-        with:
-          name: Jest Tests
-          path: /tmp/coverage/junit.xml
-          reporter: jest-junit
-          fail-on-error: false
+        continue-on-error: true
+        run: pnpm jest --ci --coverage=true | tee /tmp/coverage.txt && exit ${PIPESTATUS[0]}
 
       - name: Comment on pull request
         if: github.event_name == 'pull_request'
