@@ -2,8 +2,13 @@ name: Unit Test
 
 on:
   pull_request:
-  push:
+    branches:
+      - master
   workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to test"
+        required: true
 
 jobs:
   unit-test:
@@ -33,4 +38,5 @@ jobs:
         run: pnpm test:coverage --ci
 
       - name: Jest Coverage Comment
+        if: github.event_name == 'pull_request'
         uses: MishaKav/jest-coverage-comment@main
