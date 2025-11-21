@@ -4,7 +4,7 @@ const config = {
 
   coverageDirectory: "coverage",
   coverageProvider: "v8",
-  coverageReporters: ["json-summary", "lcov", "text"],
+  coverageReporters: [],
 };
 
 module.exports = config;
