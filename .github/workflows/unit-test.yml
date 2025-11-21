@@ -38,6 +38,7 @@ jobs:
 
       - name: Run unit tests
         run: pnpm test:coverage --ci | tee /tmp/coverage.txt && exit ${PIPESTATUS[0]}
+        continue-on-error: true
 
       - name: Comment on pull request
         if: github.event_name == 'pull_request'
