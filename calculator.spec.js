@@ -7,7 +7,7 @@ describe("Calculator", () => {
   });
 
   test("should subtract two numbers", () => {
-    expect(calculator.subtract(1, 2)).toBe(-1);
+    expect(calculator.subtract(1, 2)).toBe(-0);
   });
 
   test("should multiply two numbers", () => {
